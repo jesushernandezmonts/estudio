@@ -4,6 +4,7 @@ import { BTSTutor } from '../data/btsTutors';
 import { magicShopMessages } from '../data/loveNotes';
 import { PlayCircle, Sparkles, Users, RefreshCw, TrendingUp, Sigma, Activity, Compass, MessageCircleHeart } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import btsBannerImg from '../assets/bts_banner.png';
 
 interface DashboardViewProps {
   userName: string;
@@ -72,7 +73,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         <div className="relative z-10 w-full md:w-auto flex justify-center">
           <div className="relative group cursor-pointer" onClick={onOpenTutorModal}>
             <img
-              src="assets/bts_banner.png"
+              src={btsBannerImg}
               alt="BTS Math Banner"
               className="w-64 md:w-80 h-auto rounded-2xl object-cover border-2 border-[#a855f7]/40 shadow-2xl shadow-[#a855f7]/30 transform group-hover:scale-105 transition-transform"
             />
