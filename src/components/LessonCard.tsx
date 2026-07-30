@@ -3,7 +3,8 @@ import { Lesson } from '../types';
 import { MathRenderer } from './MathRenderer';
 import { FormattedMathText } from './FormattedMathText';
 import { StepByStepExample } from './StepByStepExample';
-import { CheckCircle2, Circle, Lightbulb, BookOpen } from 'lucide-react';
+import { useTutorVoice } from '../hooks/useTutorVoice';
+import { CheckCircle2, Circle, Lightbulb, BookOpen, Volume2, VolumeX } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 interface LessonCardProps {
@@ -17,6 +18,8 @@ export const LessonCard: React.FC<LessonCardProps> = ({
   isCompleted,
   onToggleComplete,
 }) => {
+  const { speak, stop, isSpeaking } = useTutorVoice();
+
   const handleToggle = () => {
     onToggleComplete();
     if (!isCompleted) {
@@ -24,14 +27,46 @@ export const LessonCard: React.FC<LessonCardProps> = ({
     }
   };
 
+  const handleListenLesson = () => {
+    if (isSpeaking) {
+      stop();
+    } else {
+      const textToSpeak = `${lesson.title}. ${lesson.intro}. ${lesson.chidoExplanation}. ${lesson.takeaway}`;
+      speak(textToSpeak, { pitch: 1.0, rate: 0.95 });
+    }
+  };
+
   return (
     <div className="bg-[#19112e]/90 border border-[#a855f7]/30 rounded-3xl p-6 md:p-8 space-y-7 shadow-2xl backdrop-blur-md transition-all hover:border-[#a855f7]/50">
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#a855f7]/20 pb-4">
-        <h3 className="font-fredoka text-xl md:text-2xl font-bold text-white flex items-center gap-2">
-          <BookOpen className="w-6 h-6 text-[#f472b6]" />
-          <span>{lesson.title}</span>
-        </h3>
+        <div className="flex items-center gap-3">
+          <h3 className="font-fredoka text-xl md:text-2xl font-bold text-white flex items-center gap-2">
+            <BookOpen className="w-6 h-6 text-[#f472b6]" />
+            <span>{lesson.title}</span>
+          </h3>
+          <button
+            onClick={handleListenLesson}
+            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl font-bold text-xs transition-all ${
+              isSpeaking
+                ? 'bg-[#f472b6] text-white shadow-md shadow-[#f472b6]/40 animate-pulse'
+                : 'bg-[#f472b6]/20 text-[#f472b6] border border-[#f472b6]/30 hover:bg-[#f472b6]/30'
+            }`}
+            title="Escuchar lección en voz alta 🎙️"
+          >
+            {isSpeaking ? (
+              <>
+                <VolumeX className="w-4 h-4" />
+                <span>Detener Voz</span>
+              </>
+            ) : (
+              <>
+                <Volume2 className="w-4 h-4" />
+                <span>Escuchar Explicación 🎙️</span>
+              </>
+            )}
+          </button>
+        </div>
         <span className="px-3.5 py-1 rounded-full text-xs font-bold bg-[#a855f7]/20 text-[#c084fc] border border-[#a855f7]/40 shadow-sm">
           {lesson.badge}
         </span>

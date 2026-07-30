@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { ViewType } from '../types';
 import { BTSTutor } from '../data/btsTutors';
 import { magicShopMessages } from '../data/loveNotes';
-import { PlayCircle, Sparkles, Users, RefreshCw, TrendingUp, Sigma, Activity, Compass, MessageCircleHeart } from 'lucide-react';
+import { useTutorVoice } from '../hooks/useTutorVoice';
+import { PlayCircle, Sparkles, Users, RefreshCw, TrendingUp, Sigma, Activity, Compass, MessageCircleHeart, Volume2, VolumeX } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import btsBannerImg from '../assets/bts_banner.png';
 
@@ -28,6 +29,15 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   playChime,
 }) => {
   const [magicNoteIndex, setMagicNoteIndex] = useState(0);
+  const { speak, stop, isSpeaking } = useTutorVoice();
+
+  const handleSpeakTutor = (text: string) => {
+    if (isSpeaking) {
+      stop();
+    } else {
+      speak(text, { pitch: selectedTutor.pitch, rate: selectedTutor.rate });
+    }
+  };
 
   const handleRevealMagicNote = () => {
     const nextIdx = Math.floor(Math.random() * magicShopMessages.length);
@@ -48,9 +58,22 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           <h1 className="font-fredoka text-3xl md:text-5xl font-extrabold text-white leading-tight">
             ¡Hola, {userName}! 👋💜
           </h1>
-          <p className="text-[#e9d5ff] text-base md:text-lg leading-relaxed">
-            "{selectedTutor.greeting}"
-          </p>
+          <div className="flex items-center gap-3">
+            <p className="text-[#e9d5ff] text-base md:text-lg leading-relaxed flex-1">
+              "{selectedTutor.greeting}"
+            </p>
+            <button
+              onClick={() => handleSpeakTutor(selectedTutor.greeting)}
+              className={`p-3 rounded-2xl border transition-all shrink-0 ${
+                isSpeaking
+                  ? 'bg-[#f472b6] text-white border-[#f472b6] shadow-lg shadow-[#f472b6]/40 animate-pulse'
+                  : 'bg-[#a855f7]/20 text-[#f472b6] border-[#a855f7]/40 hover:bg-[#a855f7]/30'
+              }`}
+              title={`Escuchar a ${selectedTutor.stageName} hablar 🔊`}
+            >
+              {isSpeaking ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+            </button>
+          </div>
           <div className="flex flex-wrap gap-4 pt-2">
             <button
               onClick={() => onSelectView('diferencial')}
@@ -98,9 +121,22 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             Cambiar Tutor
           </button>
         </div>
-        <p className="text-xl md:text-2xl font-bold text-white font-fredoka leading-relaxed">
-          "{selectedTutor.catchphrase}"
-        </p>
+        <div className="flex items-start justify-between gap-4">
+          <p className="text-xl md:text-2xl font-bold text-white font-fredoka leading-relaxed flex-1">
+            "{selectedTutor.catchphrase}"
+          </p>
+          <button
+            onClick={() => handleSpeakTutor(selectedTutor.catchphrase)}
+            className={`p-3 rounded-2xl border transition-all shrink-0 ${
+              isSpeaking
+                ? 'bg-[#f472b6] text-white border-[#f472b6] shadow-lg shadow-[#f472b6]/40 animate-pulse'
+                : 'bg-[#a855f7]/20 text-[#f472b6] border-[#a855f7]/40 hover:bg-[#a855f7]/30'
+            }`}
+            title={`Escuchar consejo de ${selectedTutor.stageName} 🔊`}
+          >
+            {isSpeaking ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+          </button>
+        </div>
         <p className="text-sm text-[#e9d5ff]/80">
           ✨ {selectedTutor.description}
         </p>

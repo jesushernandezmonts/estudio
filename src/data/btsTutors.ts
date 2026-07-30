@@ -10,6 +10,8 @@ export interface BTSTutor {
   catchphrase: string;
   greeting: string;
   description: string;
+  pitch: number;
+  rate: number;
 }
 
 export const btsTutors: BTSTutor[] = [
@@ -25,6 +27,8 @@ export const btsTutors: BTSTutor[] = [
     catchphrase: '¡Dominaremos cada derivada paso a paso, ARMY!',
     greeting: '¡Hola! Soy RM. Las derivadas representan el cambio instantáneo. ¡Analicemos el mundo juntos!',
     description: 'Especialista en entender los conceptos profundos y límites del cálculo diferencial.',
+    pitch: 0.9,
+    rate: 0.95,
   },
   {
     id: 'jin',
@@ -38,6 +42,8 @@ export const btsTutors: BTSTutor[] = [
     catchphrase: '¡Tu esfuerzo en las integrales es tan radiante como mi rostro!',
     greeting: '¡Worldwide Handsome Jin a tu servicio! El cálculo integral es juntar piezas para crear belleza.',
     description: 'Experto en acumulación de áreas, integrales definidas y simetría matemática.',
+    pitch: 1.1,
+    rate: 1.05,
   },
   {
     id: 'suga',
@@ -51,6 +57,8 @@ export const btsTutors: BTSTutor[] = [
     catchphrase: 'No te estreses con las ecuaciones, encuentra el patrón y la lógica.',
     greeting: 'Que tal, soy Suga. Las ecuaciones diferenciales son como componer música: todo tiene su ritmo.',
     description: 'Especialista en ecuaciones diferenciales y modelos que predicen el futuro.',
+    pitch: 0.85,
+    rate: 0.9,
   },
   {
     id: 'jhope',
@@ -64,6 +72,8 @@ export const btsTutors: BTSTutor[] = [
     catchphrase: "I'm your hope, you're my hope! ¡Ánimo con la tangente!",
     greeting: '¡Hola! ¡Soy tu esperanza J-Hope! ¡Vamos a darle la mejor energía a la pendiente de la curva!',
     description: 'Lleno de energía para hacer que la recta tangente y la velocidad sean divertidas.',
+    pitch: 1.15,
+    rate: 1.1,
   },
   {
     id: 'jimin',
@@ -77,6 +87,8 @@ export const btsTutors: BTSTutor[] = [
     catchphrase: '¡Paso a paso vamos a suavizar cualquier problema difícil!',
     greeting: '¡Hola ARMY! Soy Jimin. Al igual que en la danza, las sumas de Riemann requieren precisión y gracia.',
     description: 'Especialista en áreas bajo la curva y continuidad de funciones.',
+    pitch: 1.1,
+    rate: 1.0,
   },
   {
     id: 'v',
@@ -90,6 +102,8 @@ export const btsTutors: BTSTutor[] = [
     catchphrase: 'El cálculo es arte puro. Mira cómo fluyen las líneas de dirección.',
     greeting: 'Soy V. Para mí, el cálculo es una obra de arte visual. ¡Exploremos los campos de direcciones!',
     description: 'Visión artística para entender campos vectoriales, gráficos y dirección.',
+    pitch: 0.8,
+    rate: 0.9,
   },
   {
     id: 'jungkook',
@@ -103,5 +117,7 @@ export const btsTutors: BTSTutor[] = [
     catchphrase: '¡Demuestra tu poder ARMY y consigue todos los puntos de XP!',
     greeting: '¡Hey ARMY! Soy Jungkook. ¡Demostremos de qué estamos hechos superando todos los Quizzes!',
     description: 'El Golden Maknae apasionado por los desafíos, quizzes de velocidad y subir de nivel.',
+    pitch: 1.0,
+    rate: 1.05,
   },
 ];

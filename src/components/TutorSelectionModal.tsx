@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { btsTutors, BTSTutor } from '../data/btsTutors';
-import { Sparkles, CheckCircle2, Heart } from 'lucide-react';
+import { useTutorVoice } from '../hooks/useTutorVoice';
+import { Sparkles, CheckCircle2, Heart, Volume2, VolumeX } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 interface TutorSelectionModalProps {
@@ -20,12 +21,22 @@ export const TutorSelectionModal: React.FC<TutorSelectionModalProps> = ({
 }) => {
   const [hoveredId, setHoveredId] = useState<string | null>(selectedTutorId || 'rm');
   const [activeId, setActiveId] = useState<string>(selectedTutorId || 'rm');
+  const { speak, stop, isSpeaking } = useTutorVoice();
 
   if (!isOpen) return null;
 
   const currentTutor = btsTutors.find((t) => t.id === activeId) || btsTutors[0];
 
+  const handleListenTutor = () => {
+    if (isSpeaking) {
+      stop();
+    } else {
+      speak(currentTutor.greeting, { pitch: currentTutor.pitch, rate: currentTutor.rate });
+    }
+  };
+
   const handleConfirm = () => {
+    stop();
     onSelectTutor(activeId);
     confetti({
       particleCount: 70,
@@ -100,9 +111,23 @@ export const TutorSelectionModal: React.FC<TutorSelectionModalProps> = ({
                 {currentTutor.role}
               </span>
             </div>
-            <p className="text-sm text-[#e9d5ff]/90 italic">
-              "{currentTutor.greeting}"
-            </p>
+            <div className="flex items-center gap-3 pt-1">
+              <p className="text-sm text-[#e9d5ff]/90 italic flex-1">
+                "{currentTutor.greeting}"
+              </p>
+              <button
+                type="button"
+                onClick={handleListenTutor}
+                className={`p-2.5 rounded-xl border transition-all shrink-0 ${
+                  isSpeaking
+                    ? 'bg-[#f472b6] text-white border-[#f472b6] shadow-md shadow-[#f472b6]/40 animate-pulse'
+                    : 'bg-[#a855f7]/20 text-[#f472b6] border-[#a855f7]/40 hover:bg-[#a855f7]/30'
+                }`}
+                title={`Escuchar a ${currentTutor.stageName} 🔊`}
+              >
+                {isSpeaking ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+              </button>
+            </div>
             <p className="text-xs text-[#c084fc]">
               ✨ {currentTutor.description}
             </p>
