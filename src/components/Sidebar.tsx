@@ -1,5 +1,6 @@
 import React from 'react';
 import { ViewType } from '../types';
+import { BTSTutor } from '../data/btsTutors';
 import { 
   Sparkles, 
   TrendingUp, 
@@ -11,7 +12,8 @@ import {
   Calculator, 
   Award, 
   Heart, 
-  X 
+  X,
+  UserCheck
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -21,6 +23,8 @@ interface SidebarProps {
   onCloseMobile: () => void;
   userName: string;
   loveNotesCount: number;
+  selectedTutor: BTSTutor;
+  onOpenTutorModal: () => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -30,6 +34,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onCloseMobile,
   userName,
   loveNotesCount,
+  selectedTutor,
+  onOpenTutorModal,
 }) => {
   const handleNavClick = (view: ViewType) => {
     onSelectView(view);
@@ -236,15 +242,36 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
         </nav>
 
-        {/* Footer User Card */}
-        <div className="p-4 border-t border-[#a855f7]/20">
-          <div className="flex items-center gap-3 p-3 rounded-2xl bg-[#a855f7]/10 border border-[#a855f7]/30">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#f472b6] to-[#a855f7] flex items-center justify-center text-xl shadow-md">
+        {/* Footer User & BTS Tutor Card */}
+        <div className="p-4 border-t border-[#a855f7]/20 space-y-2">
+          {/* Active Tutor Card */}
+          <button
+            onClick={onOpenTutorModal}
+            className="w-full flex items-center justify-between p-2.5 rounded-2xl bg-gradient-to-r from-[#19112e] to-[#2d1b4e] border border-[#f472b6]/40 hover:border-[#f472b6] transition-all text-left group"
+          >
+            <div className="flex items-center gap-2.5">
+              <div className={`w-9 h-9 rounded-xl bg-gradient-to-br ${selectedTutor.gradient} flex items-center justify-center text-lg shadow-md`}>
+                {selectedTutor.emoji}
+              </div>
+              <div className="overflow-hidden">
+                <div className="text-xs font-bold text-white group-hover:text-[#f472b6] transition-colors flex items-center gap-1">
+                  <span>Tutor {selectedTutor.stageName}</span>
+                  <UserCheck className="w-3 h-3 text-[#f472b6]" />
+                </div>
+                <div className="text-[10px] text-[#c084fc] truncate">{selectedTutor.badge}</div>
+              </div>
+            </div>
+            <span className="text-[10px] text-[#f472b6] font-bold px-1.5 py-0.5 rounded bg-[#f472b6]/10">Cambiar</span>
+          </button>
+
+          {/* User Info */}
+          <div className="flex items-center gap-3 p-2.5 rounded-xl bg-[#a855f7]/10 border border-[#a855f7]/20">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-[#f472b6] to-[#a855f7] flex items-center justify-center text-base shadow-md">
               👑
             </div>
             <div className="overflow-hidden">
-              <div className="font-bold text-sm text-white truncate">{userName}</div>
-              <div className="text-xs text-[#c084fc] truncate">Nivel: Mikrokosmos 🌌</div>
+              <div className="font-bold text-xs text-white truncate">{userName}</div>
+              <div className="text-[10px] text-[#c084fc] truncate">Nivel: Mikrokosmos 🌌</div>
             </div>
           </div>
         </div>

@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ViewType, ProgressMap } from './types';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { useLofiPlayer } from './hooks/useLofiPlayer';
+import { btsTutors } from './data/btsTutors';
 import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
 import { DashboardView } from './components/DashboardView';
@@ -13,17 +14,37 @@ import { FreeLab } from './components/labs/FreeLab';
 import { QuizArena } from './components/QuizArena';
 import { LoveNotesView } from './components/LoveNotesView';
 import { CustomizationModal } from './components/CustomizationModal';
+import { TutorSelectionModal } from './components/TutorSelectionModal';
 
 export const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<ViewType>('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isCustomModalOpen, setIsCustomModalOpen] = useState(false);
+  const [isTutorModalOpen, setIsTutorModalOpen] = useState(false);
 
   const [userName, setUserName] = useLocalStorage<string>('mathverse_user_name', 'ARMY Estrella 💜');
+  const [tutorId, setTutorId] = useLocalStorage<string>('mathverse_tutor_id', 'rm');
+  const [hasChosenTutor, setHasChosenTutor] = useLocalStorage<boolean>('mathverse_has_chosen_tutor', false);
   const [userXP, setUserXP] = useLocalStorage<number>('mathverse_xp', 0);
   const [progress, setProgress] = useLocalStorage<ProgressMap>('mathverse_progress', {});
 
   const { isPlaying: isLofiPlaying, toggleLofi, playChime } = useLofiPlayer();
+
+  // Show tutor modal automatically on first enter if not yet chosen
+  useEffect(() => {
+    if (!hasChosenTutor) {
+      setIsTutorModalOpen(true);
+    }
+  }, [hasChosenTutor]);
+
+  const selectedTutor = btsTutors.find((t) => t.id === tutorId) || btsTutors[0];
+
+  const handleSelectTutor = (newTutorId: string) => {
+    setTutorId(newTutorId);
+    setHasChosenTutor(true);
+    setIsTutorModalOpen(false);
+    playChime();
+  };
 
   const handleToggleLesson = (lessonId: string) => {
     const isDone = !progress[lessonId];
@@ -56,6 +77,8 @@ export const App: React.FC = () => {
         return (
           <DashboardView
             userName={userName}
+            selectedTutor={selectedTutor}
+            onOpenTutorModal={() => setIsTutorModalOpen(true)}
             onSelectView={setCurrentView}
             diffDoneCount={diffDoneCount}
             intDoneCount={intDoneCount}
@@ -66,7 +89,7 @@ export const App: React.FC = () => {
       case 'diferencial':
         return (
           <CurriculumView
-            category="diferencial"
+ category="diferencial"
             title="Cálculo Diferencial 📐 (RM & Hobi)"
             subtitle="El estudio del cambio instantáneo, velocidades y tangentes."
             headerGradient="bg-gradient-to-r from-[#19112e] via-[#2d1b4e] to-[#a855f7]/30"
@@ -124,12 +147,16 @@ export const App: React.FC = () => {
         onCloseMobile={() => setIsSidebarOpen(false)}
         userName={userName}
         loveNotesCount={unlockedLoveNotes}
+        selectedTutor={selectedTutor}
+        onOpenTutorModal={() => setIsTutorModalOpen(true)}
       />
 
       <div className="lg:pl-[280px] min-h-screen flex flex-col relative z-10">
         <Header
           onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
           onOpenCustomModal={() => setIsCustomModalOpen(true)}
+          onOpenTutorModal={() => setIsTutorModalOpen(true)}
+          selectedTutor={selectedTutor}
           xpPoints={userXP}
           isLofiPlaying={isLofiPlaying}
           onToggleLofi={toggleLofi}
@@ -146,6 +173,16 @@ export const App: React.FC = () => {
         onClose={() => setIsCustomModalOpen(false)}
         currentName={userName}
         onSaveName={setUserName}
+        currentTutorId={tutorId}
+        onSaveTutor={setTutorId}
+      />
+
+      <TutorSelectionModal
+        isOpen={isTutorModalOpen}
+        selectedTutorId={tutorId}
+        onSelectTutor={handleSelectTutor}
+        onClose={() => setIsTutorModalOpen(false)}
+        isFirstTime={!hasChosenTutor}
       />
     </div>
   );
